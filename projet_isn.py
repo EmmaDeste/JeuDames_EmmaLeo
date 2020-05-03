@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 
 fen=Tk()
 fen.title("sc6 ex 1")

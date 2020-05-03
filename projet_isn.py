@@ -1,5 +1,6 @@
 from Tkinter import *
 
+chemin = "./"
 fen=Tk()
 fen.title("sc6 ex 1")
 c=Canvas(fen, height=1000,width=1000,bg='white')
@@ -9,8 +10,10 @@ Pion_x=0
 xx=0
 yy=0
 Pion_y=0
-pionB= PhotoImage(file="pion blanc.png")
-pionN= PhotoImage(file="pion noir.png")
+fichier = chemin + "pion_blanc.png"
+pionB= PhotoImage(fichier)
+fichier2 = chemin + "pion_noir.png"
+pionN= PhotoImage(fichier2)
 pionblanc=0
 pionnoir=0
 g=False

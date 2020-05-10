@@ -2,15 +2,16 @@ from tkinter import *
 
 fen=Tk()
 fen.title("sc6 ex 1")
-c=Canvas(fen, height=1000,width=1000,bg='white')
+#Emma: adaptation à la taille de mon écran
+c=Canvas(fen, height=960,width=1000,bg='white')
 c.grid(row=0,column=0)
 #Pion =======================
 Pion_x=0
 xx=0
 yy=0
 Pion_y=0
-pionB= PhotoImage(file="pion blanc.png")
-pionN= PhotoImage(file="pion noir.png")
+pionB= PhotoImage(file="pion_blanc.png")
+pionN= PhotoImage(file="pion_noir.png")
 pionblanc=0
 pionnoir=0
 g=False
@@ -246,6 +247,7 @@ def plateau():
 def clique(evt):
 #	print(evt.x,evt.y)
 	global g,pionblanc,pionnoir,Pion_x,Pion_y,pion,crochet,ligneliste,Pionjouer
+	print("clique: ",g,pionblanc,pionnoir,Pion_x,Pion_y,pion,crochet,ligneliste,Pionjouer)
 	if Pionjouer== True:
 		ligneliste=-1
 		x=evt.x
@@ -281,6 +283,8 @@ def clique(evt):
 							g=True
 							crochet=sigma
 							pion=pionbougn()
+	#Emma: ajout de l'instruction dans la zone de texte
+	majM2()
 
 
 
@@ -430,6 +434,8 @@ def pionbougb():
 					
 def bouge(evt):
 	global Pion_x,Pion_y,g,x,y,pion,vg,allier
+	global Pionjouer
+	print("bouge:  ",Pion_x,Pion_y,g,pion,vg,allier,Pionjouer)
 	pion_y=0
 	pion_x=0
 	if g == True :
@@ -502,7 +508,8 @@ def clique2(evt):
 		else:
 			g=True
 			vg=True
-
+	#Emma: ajout de l'instruction dans la zone de texte
+	majM2()
 
 
 
@@ -685,21 +692,50 @@ def Tour():
 		pionnoir.pop(ligneliste)
 		pionnoir.insert(ligneliste,[Pion_x,Pion_y])
 		Pionjouer=True
-		
+	#Emma: ajout de l'instruction dans la zone de texte
+	majM2()
+	
+#Emma: instructions pour le joueur 
+def majM2():
+	"""Fonction qui met à jour la zone de texte pour indiquer si c'est aux pions noirs ou aux pions noirs de jouer"""
+	global turn, nbdecase
+	global message2
+	if nbdecase<=0:
+		message=""
+	elif turn==1:
+		message="C'est au tour des pions blancs de jouer"
+	elif turn==2:
+		message="C'est au tour des pions noirs de jouer"
+	else:
+		message="erreur 404"
+	message2.set(message)
+	
 
 
 
 c.bind_all('<Button-1>',clique)
 c.bind_all ('<Motion>', bouge)
 c.bind_all('<Button-3>',clique2) 
+#Emma: adaptation au trackpad du Mac qui ne comporte qu'un bouton
+c.bind_all('<Double-1>',clique2)
+
+#Emma: création des Labels pour donner les instructions
+Wmessage1=Label(fen,text="Zone de texte 1",width=100)
+Wmessage1.grid(row=1,column=0)
+message2=StringVar()
+message2.set("bonjour")
+Wmessage2=Label(fen,textvariable=message2,width=100)
+Wmessage2.grid(row=1,column=1)
 
 Wtour=Button(fen,text="Fin du Tour",command=Tour,width=12)
-Wtour.grid(row=0,column=1)
-
+Wtour.grid(row=3,column=1)
 
 Winterrupteur=Button(fen,text="Jouer",command=debut,width=12)
-Winterrupteur.grid(row=1,column=0,)
+Winterrupteur.grid(row=3,column=0,)
+
+#Winterrupteur=Button(fen,text="Pion",command=pion,width=12)
+#Winterrupteur.grid(row=4,column=1)
 
 Wquitter=Button(fen,text="Quitter",command=fen.quit)  
-Wquitter.grid(row=2,column=0) 
+Wquitter.grid(row=4,column=0) 
 fen.mainloop()

@@ -2,12 +2,28 @@ from tkinter import *
 #Emma: import du package pour régler les chronos
 import datetime 
 
+#Emma: demander les noms d'utilisateurs
+def demande(question):
+	reponse=input(question)
+	while len(reponse)<1 or len(reponse)>10:
+		if len(reponse)>10:
+			print("Donnez un nom de moins de 10 caractères")
+		if len(reponse)<1:
+			print("Donnez un nom plus long")
+		reponse=input(question)
+	return reponse
+	
+nomBlanc=demande("Quel est le nom d'utilisateur du joueur des pions blancs ?  ")
+nomNoir=demande("Quel est le nom d'utilisateur du joueur des pions noirs ?  ")
+
 fen=Tk()
-fen.title("sc6 ex 1")
+fen.title("Jeu de Dames de Léo Flandin et Emma Desté")
 #Emma: adaptation à la taille de mon écran
 c=Canvas(fen, height=960,width=1000,bg='white')
 #Emma: utilisation de rowspan pour placer plusieurs chronomètres à côté du damier
-c.grid(row=0,rowspan=4,column=0)
+c.grid(row=0,rowspan=7,column=0)
+
+
 #Pion =======================
 Pion_x=0
 xx=0
@@ -680,6 +696,8 @@ def pionallie():
 def debut():
 	plateau()
 	pion()
+#Emma:
+	fermetureFormulaire()
 
 def Tour():
 	global turn, Pionjouer
@@ -761,7 +779,6 @@ def majChrono():
 	oldnbdecase=nbdecase
 	oldturn=turn
 	
-	
 
 #Emma
 def majM():
@@ -771,6 +788,9 @@ def majM():
 	majM2()
 	majChrono()
 	c.after(100,majM)
+
+	
+
 
 #Emma: mémorisation des anciennes valeurs pour déclencher les chronos sur les changements
 oldnbdecase=nbdecase
@@ -788,57 +808,54 @@ c.bind_all('<Double-1>',clique2)
 
 #Emma: ajout des chronomètres
 titreC1=StringVar()
-titreC1.set("Blanc")
+titreC1.set(nomBlanc)
 Wtitre1=Label(fen,textvariable=titreC1,width=7)
-Wtitre1.grid(row=0,column=2)
+Wtitre1.grid(row=3,column=2)
 titreC2=StringVar()
-titreC2.set("Noir")
+titreC2.set(nomNoir)
 Wtitre2=Label(fen,textvariable=titreC2,width=7)
-Wtitre2.grid(row=0,column=3)
+Wtitre2.grid(row=3,column=3)
 Wtitre0=Label(fen,text="Durées",width=10)
-Wtitre0.grid(row=0,column=1)
+Wtitre0.grid(row=3,column=1)
 Wtitre3=Label(fen,text="Coup actuel",width=10)
-Wtitre3.grid(row=1,column=1)
+Wtitre3.grid(row=4,column=1)
 Wtitre4=Label(fen,text="Totaux",width=10)
-Wtitre4.grid(row=2,column=1)
+Wtitre4.grid(row=5,column=1)
 
 textChrono1=StringVar()
 textChrono1.set(".......")
 Wchrono1=Label(fen,textvariable=textChrono1, width=15)
-Wchrono1.grid(row=1,column=2)
+Wchrono1.grid(row=4,column=2)
 textChrono2=StringVar()
 textChrono2.set(".......")
 Wchrono2=Label(fen,textvariable=textChrono2, width=15)
-Wchrono2.grid(row=1,column=3)
+Wchrono2.grid(row=4,column=3)
 textChrono3=StringVar()
 textChrono3.set("0 s")
 Wchrono3=Label(fen,textvariable=textChrono3, width=15)
-Wchrono3.grid(row=2,column=2)
+Wchrono3.grid(row=5,column=2)
 textChrono4=StringVar()
 textChrono4.set("0 s")
 Wchrono4=Label(fen,textvariable=textChrono4, width=15)
-Wchrono4.grid(row=2,column=3)
+Wchrono4.grid(row=5,column=3)
 
 #Emma: création des Labels pour donner les instructions
 message1=StringVar()
 message1.set("Initialisation en cours")
 Wmessage1=Label(fen,textvariable=message1,width=40)
-Wmessage1.grid(row=4,column=0)
+Wmessage1.grid(row=7,column=0)
 
 message2=StringVar()
 message2.set("Initialisation en cours")
 Wmessage2=Label(fen,textvariable=message2,width=40)
-Wmessage2.grid(row=4,column=1,columnspan=3)
+Wmessage2.grid(row=7,column=1,columnspan=3)
 
 Wtour=Button(fen,text="Fin du Tour",command=Tour,width=12)
-Wtour.grid(row=5,column=1,columnspan=3)
+Wtour.grid(row=8,column=1,columnspan=3)
 
 Winterrupteur=Button(fen,text="Jouer",command=debut,width=12)
-Winterrupteur.grid(row=5,column=0,)
-
-#Winterrupteur=Button(fen,text="Pion",command=pion,width=12)
-#Winterrupteur.grid(row=4,column=1)
+Winterrupteur.grid(row=8,column=0,)
 
 Wquitter=Button(fen,text="Quitter",command=fen.quit)  
-Wquitter.grid(row=6,column=0) 
+Wquitter.grid(row=9,column=0) 
 fen.mainloop()

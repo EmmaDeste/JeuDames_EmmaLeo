@@ -1,10 +1,13 @@
 from tkinter import *
+#Emma: import du package pour régler les chronos
+import datetime 
 
 fen=Tk()
 fen.title("sc6 ex 1")
 #Emma: adaptation à la taille de mon écran
 c=Canvas(fen, height=960,width=1000,bg='white')
-c.grid(row=0,column=0)
+#Emma: utilisation de rowspan pour placer plusieurs chronomètres à côté du damier
+c.grid(row=0,rowspan=4,column=0)
 #Pion =======================
 Pion_x=0
 xx=0
@@ -163,6 +166,7 @@ def pion():
 	pionnoir+=[[740,880]]
 	pionn20=c.create_image(880,880,image=pionN,anchor=NW)
 	pionnoir+=[[880,880]]
+	majM()
 
 
 
@@ -247,7 +251,6 @@ def plateau():
 def clique(evt):
 #	print(evt.x,evt.y)
 	global g,pionblanc,pionnoir,Pion_x,Pion_y,pion,crochet,ligneliste,Pionjouer
-	print("clique: ",g,pionblanc,pionnoir,Pion_x,Pion_y,pion,crochet,ligneliste,Pionjouer)
 	if Pionjouer== True:
 		ligneliste=-1
 		x=evt.x
@@ -284,7 +287,7 @@ def clique(evt):
 							crochet=sigma
 							pion=pionbougn()
 	#Emma: ajout de l'instruction dans la zone de texte
-	majM2()
+	majM()
 
 
 
@@ -434,8 +437,6 @@ def pionbougb():
 					
 def bouge(evt):
 	global Pion_x,Pion_y,g,x,y,pion,vg,allier
-	global Pionjouer
-	print("bouge:  ",Pion_x,Pion_y,g,pion,vg,allier,Pionjouer)
 	pion_y=0
 	pion_x=0
 	if g == True :
@@ -509,7 +510,7 @@ def clique2(evt):
 			g=True
 			vg=True
 	#Emma: ajout de l'instruction dans la zone de texte
-	majM2()
+	majM()
 
 
 
@@ -693,7 +694,25 @@ def Tour():
 		pionnoir.insert(ligneliste,[Pion_x,Pion_y])
 		Pionjouer=True
 	#Emma: ajout de l'instruction dans la zone de texte
-	majM2()
+	majM()
+	
+	
+#Emma: instructions pour le joueur 
+def majM1():
+	"""Fonction qui met à jour la zone de texte pour indiquer les instructions à suivre pour jouer"""	
+	global nbdecase,g,Pionjouer
+	global message1
+	if nbdecase<=0:
+		message="Cliquer sur le bouton Jouer"
+	elif Pionjouer==False:
+		message="Cliquer sur le bouton Fin du Tour"
+	elif g==False:
+		message="Cliquer sur un de vos pions"
+	elif g==True:
+		message="Doublie cliquer sur la case destination de votre pion"
+	else:
+		message="erreur 407"
+	message1.set(message)
 	
 #Emma: instructions pour le joueur 
 def majM2():
@@ -710,8 +729,46 @@ def majM2():
 		message="erreur 404"
 	message2.set(message)
 	
+#Emma
+def majChrono():
+	"""Calcul et Affichage des quatre valeurs des chronomètres"""
+	global oldnbdecase,oldturn,partieEnCours,heureDebutCoup
+	heureActuelle=datetime.datetime.now()
+	if oldnbdecase<=0 and nbdecase>0:
+		heureDebutCoup=heureActuelle
+		partieEnCours=True
+	if partieEnCours:
+		if oldturn!=turn:
+			heureDebutCoup=heureActuelle
+		dureeCoupActuel=(heureActuelle-heureDebutCoup).total_seconds()
+		if turn==1:
+			s=str(dureeCoupActuel)[:6]+" s"
+			textChrono1.set(s)
+			textChrono2.set("")
+		if turn==2:
+			s=str(dureeCoupActuel)[:6]+" s"
+			textChrono1.set("")
+			textChrono2.set(s)
+			
+	oldnbdecase=nbdecase
+	oldturn=turn
+	
+	
 
+#Emma
+def majM():
+	"""Mise à jour de l'ensemble des Labels: au tour de quel joueur est-ce de jouer, sur quel bouton appuyer, chronometre..."""
+	global c
+	majM1()
+	majM2()
+	majChrono()
+	c.after(100,majM)
 
+#Emma: mémorisation des anciennes valeurs pour déclencher les chronos sur les changements
+oldnbdecase=nbdecase
+oldturn=turn
+heureDebutCoup=0
+partieEnCours=False
 
 c.bind_all('<Button-1>',clique)
 c.bind_all ('<Motion>', bouge)
@@ -719,23 +776,55 @@ c.bind_all('<Button-3>',clique2)
 #Emma: adaptation au trackpad du Mac qui ne comporte qu'un bouton
 c.bind_all('<Double-1>',clique2)
 
+#Emma: ajout des chronomètres
+titreC1=StringVar()
+titreC1.set("Blanc")
+Wtitre1=Label(fen,textvariable=titreC1,width=7)
+Wtitre1.grid(row=0,column=2)
+titreC2=StringVar()
+titreC2.set("Noir")
+Wtitre2=Label(fen,textvariable=titreC2,width=7)
+Wtitre2.grid(row=0,column=3)
+Wtitre0=Label(fen,text="Durées",width=10)
+Wtitre0.grid(row=0,column=1)
+Wtitre3=Label(fen,text="Coup actuel",width=10)
+Wtitre3.grid(row=1,column=1)
+Wtitre4=Label(fen,text="Totaux",width=10)
+Wtitre4.grid(row=2,column=1)
+
+textChrono1=StringVar()
+textChrono1.set("chrono1")
+Wchrono1=Label(fen,textvariable=textChrono1, width=15)
+Wchrono1.grid(row=1,column=2)
+textChrono2=StringVar()
+textChrono2.set("chrono2")
+Wchrono2=Label(fen,textvariable=textChrono2, width=15)
+Wchrono2.grid(row=1,column=3)
+Wchrono3=Label(fen,text="chrono3", width=15)
+Wchrono3.grid(row=2,column=2)
+Wchrono4=Label(fen,text="chrono4", width=15)
+Wchrono4.grid(row=2,column=3)
+
 #Emma: création des Labels pour donner les instructions
-Wmessage1=Label(fen,text="Zone de texte 1",width=100)
-Wmessage1.grid(row=1,column=0)
+message1=StringVar()
+message1.set("Initialisation en cours")
+Wmessage1=Label(fen,textvariable=message1,width=30)
+Wmessage1.grid(row=4,column=0)
+
 message2=StringVar()
-message2.set("bonjour")
-Wmessage2=Label(fen,textvariable=message2,width=100)
-Wmessage2.grid(row=1,column=1)
+message2.set("Initialisation en cours")
+Wmessage2=Label(fen,textvariable=message2,width=30)
+Wmessage2.grid(row=4,column=1,columnspan=3)
 
 Wtour=Button(fen,text="Fin du Tour",command=Tour,width=12)
-Wtour.grid(row=3,column=1)
+Wtour.grid(row=5,column=1,columnspan=3)
 
 Winterrupteur=Button(fen,text="Jouer",command=debut,width=12)
-Winterrupteur.grid(row=3,column=0,)
+Winterrupteur.grid(row=5,column=0,)
 
 #Winterrupteur=Button(fen,text="Pion",command=pion,width=12)
 #Winterrupteur.grid(row=4,column=1)
 
 Wquitter=Button(fen,text="Quitter",command=fen.quit)  
-Wquitter.grid(row=4,column=0) 
+Wquitter.grid(row=6,column=0) 
 fen.mainloop()

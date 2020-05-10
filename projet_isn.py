@@ -732,14 +732,12 @@ def majM2():
 #Emma
 def majChrono():
 	"""Calcul et Affichage des quatre valeurs des chronomètres"""
-	global oldnbdecase,oldturn,partieEnCours,heureDebutCoup
+	global oldnbdecase,oldturn,partieEnCours,heureDebutCoup,dureeTotaleBlanc,dureeTotaleNoir
 	heureActuelle=datetime.datetime.now()
 	if oldnbdecase<=0 and nbdecase>0:
 		heureDebutCoup=heureActuelle
 		partieEnCours=True
 	if partieEnCours:
-		if oldturn!=turn:
-			heureDebutCoup=heureActuelle
 		dureeCoupActuel=(heureActuelle-heureDebutCoup).total_seconds()
 		if turn==1:
 			s=str(dureeCoupActuel)[:6]+" s"
@@ -749,7 +747,17 @@ def majChrono():
 			s=str(dureeCoupActuel)[:6]+" s"
 			textChrono1.set("")
 			textChrono2.set(s)
-			
+		if oldturn!=turn:
+			heureDebutCoup=heureActuelle
+			if oldturn==1:
+				dureeTotaleBlanc+=dureeCoupActuel
+				s=str(dureeTotaleBlanc)+" s"
+				textChrono3.set(s)
+			if oldturn==2:
+				dureeTotaleNoir+=dureeCoupActuel
+				s=str(dureeTotaleNoir)+" s"
+				textChrono4.set(s)
+				
 	oldnbdecase=nbdecase
 	oldturn=turn
 	
@@ -768,6 +776,8 @@ def majM():
 oldnbdecase=nbdecase
 oldturn=turn
 heureDebutCoup=0
+dureeTotaleBlanc=0.0
+dureeTotaleNoir=0.0
 partieEnCours=False
 
 c.bind_all('<Button-1>',clique)
@@ -793,27 +803,31 @@ Wtitre4=Label(fen,text="Totaux",width=10)
 Wtitre4.grid(row=2,column=1)
 
 textChrono1=StringVar()
-textChrono1.set("chrono1")
+textChrono1.set(".......")
 Wchrono1=Label(fen,textvariable=textChrono1, width=15)
 Wchrono1.grid(row=1,column=2)
 textChrono2=StringVar()
-textChrono2.set("chrono2")
+textChrono2.set(".......")
 Wchrono2=Label(fen,textvariable=textChrono2, width=15)
 Wchrono2.grid(row=1,column=3)
-Wchrono3=Label(fen,text="chrono3", width=15)
+textChrono3=StringVar()
+textChrono3.set("0 s")
+Wchrono3=Label(fen,textvariable=textChrono3, width=15)
 Wchrono3.grid(row=2,column=2)
-Wchrono4=Label(fen,text="chrono4", width=15)
+textChrono4=StringVar()
+textChrono4.set("0 s")
+Wchrono4=Label(fen,textvariable=textChrono4, width=15)
 Wchrono4.grid(row=2,column=3)
 
 #Emma: création des Labels pour donner les instructions
 message1=StringVar()
 message1.set("Initialisation en cours")
-Wmessage1=Label(fen,textvariable=message1,width=30)
+Wmessage1=Label(fen,textvariable=message1,width=40)
 Wmessage1.grid(row=4,column=0)
 
 message2=StringVar()
 message2.set("Initialisation en cours")
-Wmessage2=Label(fen,textvariable=message2,width=30)
+Wmessage2=Label(fen,textvariable=message2,width=40)
 Wmessage2.grid(row=4,column=1,columnspan=3)
 
 Wtour=Button(fen,text="Fin du Tour",command=Tour,width=12)

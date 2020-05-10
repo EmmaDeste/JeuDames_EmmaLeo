@@ -1,6 +1,5 @@
-from Tkinter import *
+from tkinter import *
 
-chemin = "./"
 fen=Tk()
 fen.title("sc6 ex 1")
 c=Canvas(fen, height=1000,width=1000,bg='white')
@@ -10,10 +9,8 @@ Pion_x=0
 xx=0
 yy=0
 Pion_y=0
-fichier = chemin + "pion_blanc.png"
-pionB= PhotoImage(fichier)
-fichier2 = chemin + "pion_noir.png"
-pionN= PhotoImage(fichier2)
+pionB= PhotoImage(file="pion blanc.png")
+pionN= PhotoImage(file="pion noir.png")
 pionblanc=0
 pionnoir=0
 g=False
@@ -23,6 +20,9 @@ carreauxliste=[]
 pionblanc=[]
 pionnoir=[]
 vg=True
+Pionjouer=True
+allier=False
+verif=[]
 
 pionb1=""
 pionb2=""
@@ -245,41 +245,42 @@ def plateau():
 
 def clique(evt):
 #	print(evt.x,evt.y)
-	global g,pionblanc,pionnoir,Pion_x,Pion_y,pion,crochet,ligneliste
-	ligneliste=-1
-	x=evt.x
-	y=evt.y
-	a=2
-	if turn==1:
-		if g == False:
-			for sigma in pionblanc:
-				ligneliste+=1
-				for alpha in sigma:
-					if a//2==0:
-						a+=1
-						Pion_y=alpha
-					else:
-						a-=1 
-						Pion_x=alpha
-					if Pion_x-35<=x<=Pion_x+35 and Pion_y-35<=y<=Pion_y+35:
-						g=True
-						crochet=sigma
-						pion=pionbougb()
-	else:	
-		if g== False:
-			for sigma in pionnoir:
-				ligneliste+=1
-				for alpha in sigma:
-					if a//2==0:
-						a+=1
-						Pion_y=alpha
-					else:
-						a-=1 
-						Pion_x=alpha
-					if Pion_x-35<=x<=Pion_x+35 and Pion_y-35<=y<=Pion_y+35:
-						g=True
-						crochet=sigma
-						pion=pionbougn()
+	global g,pionblanc,pionnoir,Pion_x,Pion_y,pion,crochet,ligneliste,Pionjouer
+	if Pionjouer== True:
+		ligneliste=-1
+		x=evt.x
+		y=evt.y
+		a=2
+		if turn==1:
+			if g == False:
+				for sigma in pionblanc:
+					ligneliste+=1
+					for alpha in sigma:
+						if a//2==0:
+							a+=1
+							Pion_y=alpha
+						else:
+							a-=1 
+							Pion_x=alpha
+						if Pion_x-35<=x<=Pion_x+35 and Pion_y-35<=y<=Pion_y+35:
+							g=True
+							crochet=sigma
+							pion=pionbougb()
+		else:	
+			if g== False:
+				for sigma in pionnoir:
+					ligneliste+=1
+					for alpha in sigma:
+						if a//2==0:
+							a+=1
+							Pion_y=alpha
+						else:
+							a-=1 
+							Pion_x=alpha
+						if Pion_x-35<=x<=Pion_x+35 and Pion_y-35<=y<=Pion_y+35:
+							g=True
+							crochet=sigma
+							pion=pionbougn()
 
 
 
@@ -428,58 +429,79 @@ def pionbougb():
 
 					
 def bouge(evt):
-	global Pion_x,Pion_y,g,x,y,pion,vg
+	global Pion_x,Pion_y,g,x,y,pion,vg,allier
+	pion_y=0
+	pion_x=0
 	if g == True :
 		if 250<evt.x<1000 and 250<evt.y<1000: 
 			c.coords(pion,evt.x,evt.y)
 	if vg== False :
 		c.coords(pion,Pion_x,Pion_y)
 		vg=True
+	elif allier==True:
+		pion_x=crochet[0]
+		pion_y=crochet[1]
+		print(pion_x,pion_y)
+		c.coords(pion,pion_x,pion_y)
+		allier=False
+		g=False
 					
 
 def clique2(evt):
-	global x,y,g,Pion_x,Pion_y,turn,pionblanc,pionnoir,xx,yy,vg
-	xx=evt.x
-	yy=evt.y
-#	print(carreauxliste)
-	o=[]
-	b=[]
-	xg=0
-	carreauxlist=carreauxblanc2()
-	yg=0
-	a=0
-	for i in carreauxlist:
-		a+=1
-		if crochet == i:
-
-			if turn==1:
-				if crochet[1]==250:
-					b=carreauxlist[a+4]
-					o=carreauxlist[a+3]
+	global x,y,g,Pion_x,Pion_y,turn,pionblanc,pionnoir,xx,yy,vg,Pionjouer,allier,verif
+	print("crochet :",crochet)
+	if Pionjouer==True:
+		xx=evt.x
+		yy=evt.y
+#		print(carreauxliste)
+		o=[]
+		b=[]
+		xg=0
+		carreauxlist=carreauxblanc2()
+		yg=0
+		a=0
+		for i in carreauxlist:
+			a+=1
+			if crochet == i:
+	
+				if turn==1:
+					if crochet[1]==250 or crochet[1]== 390 or crochet[1]==530 or crochet[1]== 670 or crochet[1]==810:
+						b=carreauxlist[a+4]
+						o=carreauxlist[a+3]
+					else:
+						b=carreauxlist[a+5]
+						o=carreauxlist[a+4]
 				else:
-					b=carreauxlist[a+5]
-					o=carreauxlist[a+4]
-			else:
-				if crochet[1]==880:
-					b=carreauxlist[a-5]
-					o=carreauxlist[a-6]
-				else:
-					b=carreauxlist[a-7]
-					o=carreauxlist[a-6]
-
-	verif=verify()
-	Pion_x=verif[0]
-	Pion_y=verif[1]
-#	print("o",o,"b",b,"verif",verif,crochet)
-	if verif==o:
-		g=False
-		vg=False
-	elif verif==b:
-		g=False
-		vg=False
-	else:
-		g=True
-		vg=True
+					if crochet[1]==880 or crochet[1]== 740 or crochet[1]==600 or crochet[1]== 460 or crochet[1]== 320:
+						b=carreauxlist[a-5]
+						o=carreauxlist[a-6]
+					else:
+						b=carreauxlist[a-7]
+						o=carreauxlist[a-6]
+	
+		verif=verify()
+		Pion_x=verif[0]
+		Pion_y=verif[1]
+#		print("o",o,"b",b,"verif",verif,crochet)
+		if verif==o:
+			pionallier = pionallie()
+			if pionallier==False:
+				g=False
+				vg=False
+				Pionjouer=False
+			elif pionallier==True:
+				allier=True
+		elif verif==b:
+			pionallier = pionallie()
+			if pionallier==False:
+				g=False
+				vg=False
+				Pionjouer=False
+			elif pionallier==True:
+				allier=True
+		else:
+			g=True
+			vg=True
 
 
 
@@ -556,22 +578,113 @@ def carreauxblanc2():
 			x+=140
 	return(carreauxlist)
 
-
+def pionallie():
+	global pionn1,pionn2,pionn3,pionn4,pionn5,pionn6,pionn7,pionn8,pionn9,pionn10,pionn11,pionn12,pionn13,pionn14,pionn15,pionn16,pionn17,pionn18,pionn19,pionn20
+	global turn, verif
+	a=False
+	print(verif)
+	if turn==1:
+		a=False
+		if verif == c.coords(pionb1):
+			a=True
+		elif verif == c.coords(pionb2):
+			a=True
+		elif verif == c.coords(pionb3):
+			a=True
+		elif verif == c.coords(pionb4):
+			a=True
+		elif verif == c.coords(pionb5):
+			a=True
+		elif verif == c.coords(pionb6):
+			a=True
+		elif verif == c.coords(pionb7):
+			a=True
+		elif verif == c.coords(pionb8):
+			a=True
+		elif verif == c.coords(pionb9):
+			a=True
+		elif verif == c.coords(pionb10):
+			a=True
+		elif verif == c.coords(pionb11):
+			a=True
+		elif verif == c.coords(pionb12):
+			a=True
+		elif verif == c.coords(pionb13):
+			a=True
+		elif verif == c.coords(pionb14):
+			a=True
+		elif verif == c.coords(pionb15):
+			a=True
+		elif verif == c.coords(pionb16):
+			a=True
+		elif verif == c.coords(pionb17):
+			a=True
+		elif verif == c.coords(pionb18):
+			a=True
+		elif verif == c.coords(pionb19):
+			a=True
+		elif verif == c.coords(pionb20):
+			a=True
+	else :
+		if verif == c.coords(pionn1):
+			a=True
+		elif verif == c.coords(pionn2):
+			a=True
+		elif verif == c.coords(pionn3):
+			a=True
+		elif verif == c.coords(pionn4):
+			a=True
+		elif verif == c.coords(pionn5):
+			a=True
+		elif verif == c.coords(pionn6):
+			a=True
+		elif verif == c.coords(pionn7):
+			a=True
+		elif verif == c.coords(pionn8):
+			a=True
+		elif verif == c.coords(pionn9):
+			a=True
+		elif verif == c.coords(pionn10):
+			a=True
+		elif verif == c.coords(pionn11):
+			a=True
+		elif verif == c.coords(pionn12):
+			a=True
+		elif verif == c.coords(pionn13):
+			a=True
+		elif verif == c.coords(pionn14):
+			a=True
+		elif verif == c.coords(pionn15):
+			a=True
+		elif verif == c.coords(pionn16):
+			a=True
+		elif verif == c.coords(pionn17):
+			a=True
+		elif verif == c.coords(pionn18):
+			a=True
+		elif verif == c.coords(pionn19):
+			a=True
+		elif verif == c.coords(pionn20):
+			a=True
+	return(a)
+	
 
 def debut():
 	plateau()
 	pion()
 
 def Tour():
-	global turn
+	global turn, Pionjouer
 	if turn==1:
 		turn+=1
 		pionblanc.pop(ligneliste)
 		pionblanc.insert(ligneliste,[Pion_x,Pion_y])
+		Pionjouer=True
 	else :
 		turn-=1
 		pionnoir.pop(ligneliste)
 		pionnoir.insert(ligneliste,[Pion_x,Pion_y])
+		Pionjouer=True
 		
 
 

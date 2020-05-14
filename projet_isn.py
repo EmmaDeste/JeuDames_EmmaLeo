@@ -13,8 +13,13 @@ def demande(question):
 		reponse=input(question)
 	return reponse
 	
-nomBlanc=demande("Quel est le nom du joueur des pions blancs ?  ")
-nomNoir=demande("Quel est le nom du joueur des pions noirs ?  ")
+nomBlanc=demande("Quel est le nom du joueur des pions blancs ? \n" 
+"What is the player's name with the white pawns ? \n"
+"Was ist die Name des Spielers mit den WeiBen Bauern ? ")
+print("\n") #pour une mise en page plus lisible
+nomNoir=demande("Quel est le nom du joueur des pions noirs ? \n"
+"What is the player's name with the black pawns ? \n"
+"Was ist die Name des Spielers mit den Schwarzen Bauern ? ")
 
 fen=Tk()
 fen.title("Jeu de Dames de Léo Flandin et Emma Desté")
@@ -797,6 +802,13 @@ def majChrono():
 		else:
 			configureCouleursChrono("red","green")
 	
+	titre=listTradDuree[nLangue]
+	titre0.set(titre)
+	titre=listTradCoup[nLangue]
+	titre3.set(titre)
+	titre=listTradTotal[nLangue]
+	titre4.set(titre)
+	
 	oldnbdecase=nbdecase
 	oldturn=turn
 
@@ -806,7 +818,7 @@ def majM():
 	global c
 	majM1()
 	majM2()
-	majChrono()
+	majChrono()	
 	c.after(100,majM)
 	
 def majTextJouer():
@@ -869,15 +881,18 @@ c.bind_all('<Double-1>',clique2)
 #Emma: ajout des messages dans les différentes langues
 nLangue=0
 listTradJouer=["Jouer","Play","Spielen"]
-listTradQuitter=["Quitter","Leave","Weggehen"]
-listTradFinTour=["Fin du Tour","End of the Round","Rundes Ende"]
+listTradQuitter=["Quitter","Quit","Weggehen"]
+listTradFinTour=["Fin du Tour","End of the Round","Ende der Runde"]
 listTradTourDe=["C'est au tour de ","It's ",""]
-listTradDeJouer=[" de jouer"," turn"," ist dran"]
-listTradClicJouer=["Cliquer sur le bouton Jouer","Click on the Play button","Klick auf das Spielen Taste"]
-listTradFin=["Cliquer sur le bouton Fin du Tour","Click on the button End of the Round","Klick auf Rundes Ende Taste"]
-listTradClicPionB=["Cliquer sur un de vos pions blancs","Click on one of your white pawns","Klick auf einer von deinen Weiss Bauer"]
-listTradClicPionN=["Cliquer sur un de vos pions noirs","Click on one of your black pawns","Klick auf einer von deinen Schwarz Bauer"]
-listTradDoubleClic=["Double cliquer sur la case destination de votre pion","Doucle-click on the destination's square of your pawn","Zweimal-klick auf dein Ziels Feld auf deiner Bauer"]
+listTradDeJouer=[" de jouer","'s turn"," ist dran"]
+listTradClicJouer=["Cliquer sur le bouton Jouer","Click on the Play button","Auf die Spielen Taste drücken"]
+listTradFin=["Cliquer sur le bouton Fin du Tour","Click on the button End of the Round","Auf Ende der Runde drücken"]
+listTradClicPionB=["Cliquer sur un de vos pions blancs","Click on one of your white pawns","Auf einem deiner WeiBen Bauer drücken"]
+listTradClicPionN=["Cliquer sur un de vos pions noirs","Click on one of your black pawns","Auf einem deiner Schwarzen Bauer drücken"]
+listTradDoubleClic=["Double cliquer sur la case destination de votre pion","Doucle-click on the destination square of your pawn","Auf deinem Zielort zweimal drücken"]
+listTradDuree=["Durées","Time","Zeit"]
+listTradCoup=["Coup actuel","Current move","Momentane Bewegung"]
+listTradTotal=["Totaux","Totals","Gesamtsumme"]
 
 #Emma: ajout des drapeaux
 drapeau0= PhotoImage(file="drapeau_fr.png")
@@ -899,11 +914,17 @@ titreC2=StringVar()
 titreC2.set(nomNoir)
 Wtitre2=Label(fen,textvariable=titreC2,width=7)
 Wtitre2.grid(row=3,column=3)
-Wtitre0=Label(fen,text="Durées",width=10)
+titre0=StringVar()
+titre0.set("")
+Wtitre0=Label(fen,textvariable=titre0,width=10)
 Wtitre0.grid(row=3,column=1)
-Wtitre3=Label(fen,text="Coup actuel",width=10)
+titre3=StringVar()
+titre3.set("")
+Wtitre3=Label(fen,textvariable=titre3,width=15)
 Wtitre3.grid(row=4,column=1)
-Wtitre4=Label(fen,text="Totaux",width=10)
+titre4=StringVar()
+titre4.set("")
+Wtitre4=Label(fen,textvariable=titre4,width=10)
 Wtitre4.grid(row=5,column=1)
 
 textChrono1=StringVar()

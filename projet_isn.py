@@ -13,8 +13,8 @@ def demande(question):
 		reponse=input(question)
 	return reponse
 	
-nomBlanc=demande("Quel est le nom d'utilisateur du joueur des pions blancs ?  ")
-nomNoir=demande("Quel est le nom d'utilisateur du joueur des pions noirs ?  ")
+nomBlanc=demande("Quel est le nom du joueur des pions blancs ?  ")
+nomNoir=demande("Quel est le nom du joueur des pions noirs ?  ")
 
 fen=Tk()
 fen.title("Jeu de Dames de Léo Flandin et Emma Desté")
@@ -696,8 +696,6 @@ def pionallie():
 def debut():
 	plateau()
 	pion()
-#Emma:
-	fermetureFormulaire()
 
 def Tour():
 	global turn, Pionjouer
@@ -721,18 +719,22 @@ def majM1():
 	global nbdecase,g,Pionjouer
 	global message1
 	if nbdecase<=0:
+#		message=listeMesssage1Jouer[nLangue]
 		message="Cliquer sur le bouton Jouer"
 	elif Pionjouer==False:
 		message="Cliquer sur le bouton Fin du Tour"
 	elif g==False:
-		message="Cliquer sur un de vos pions"
+		if turn==1:
+			message="Cliquer sur un de vos pions blancs"
+		elif turn==2:
+			message="Cliquer sur un de vos pions noirs"
 	elif g==True:
 		message="Doublie cliquer sur la case destination de votre pion"
 	else:
 		message="erreur 407"
 	message1.set(message)
 	
-#Emma: instructions pour le joueur 
+#Emma: instructions pour le joueur avec son nom	
 def majM2():
 	"""Fonction qui met à jour la zone de texte pour indiquer si c'est aux pions noirs ou aux pions noirs de jouer"""
 	global turn, nbdecase
@@ -740,9 +742,9 @@ def majM2():
 	if nbdecase<=0:
 		message=""
 	elif turn==1:
-		message="C'est au tour des pions blancs de jouer"
+		message="C'est au tour de "+nomBlanc+" de jouer"
 	elif turn==2:
-		message="C'est au tour des pions noirs de jouer"
+		message="C'est au tour de "+nomNoir+" de jouer"
 	else:
 		message="erreur 404"
 	message2.set(message)
@@ -805,6 +807,21 @@ c.bind_all ('<Motion>', bouge)
 c.bind_all('<Button-3>',clique2) 
 #Emma: adaptation au trackpad du Mac qui ne comporte qu'un bouton
 c.bind_all('<Double-1>',clique2)
+
+#Emma: ajout des drapeaux
+C0=Canvas(fen,width=300, height=300)
+drapeau0= PhotoImage(file="drapeau_fr.png")
+C0.create_image(150,150, image=drapeau0)
+C0.grid(row=0, column=1)
+C1=Canvas(fen,width=300, height=300)
+drapeau1= PhotoImage(file="drapeau_en.png")
+C1.create_image(150,150, image=drapeau1)
+C1.grid(row=0, column=2)
+C2=Canvas(fen,width=300, height=300)
+drapeau2= PhotoImage(file="drapeau_de.png")
+C2.create_image(150,150, image=drapeau2)
+C2.grid(row=0, column=3)
+
 
 #Emma: ajout des chronomètres
 titreC1=StringVar()

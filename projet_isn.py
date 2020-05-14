@@ -719,19 +719,18 @@ def majM1():
 	global nbdecase,g,Pionjouer
 	global message1
 	if nbdecase<=0:
-#		message=listeMesssage1Jouer[nLangue]
-		message="Cliquer sur le bouton Jouer"
+		message=listTradClicJouer[nLangue]
 	elif Pionjouer==False:
-		message="Cliquer sur le bouton Fin du Tour"
+		message=listTradFin[nLangue]
 	elif g==False:
 		if turn==1:
-			message="Cliquer sur un de vos pions blancs"
+			message=listTradClicPionB[nLangue]
 		elif turn==2:
-			message="Cliquer sur un de vos pions noirs"
+			message=listTradClicPionN[nLangue]
 	elif g==True:
-		message="Doublie cliquer sur la case destination de votre pion"
+		message=listTradDoubleClic[nLangue]
 	else:
-		message="erreur 407"
+		message="error 407"
 	message1.set(message)
 	
 #Emma: instructions pour le joueur avec son nom	
@@ -742,11 +741,11 @@ def majM2():
 	if nbdecase<=0:
 		message=""
 	elif turn==1:
-		message="C'est au tour de "+nomBlanc+" de jouer"
+		message=listTradTourDe[nLangue]+nomBlanc+listTradDeJouer[nLangue]
 	elif turn==2:
-		message="C'est au tour de "+nomNoir+" de jouer"
+		message=listTradTourDe[nLangue]+nomNoir+listTradDeJouer[nLangue]
 	else:
-		message="erreur 404"
+		message="error 404"
 	message2.set(message)
 	
 #Emma
@@ -790,7 +789,46 @@ def majM():
 	majM2()
 	majChrono()
 	c.after(100,majM)
+	
+def majTextJouer():
+	"""Mise à jour du texte du bouton Jouer"""
+	s=listTradJouer[nLangue]
+	textJouer.set(s)
+	
+def majTextQuitter():
+	"""Mise à jour du texte du bouton Quitter"""
+	s=listTradQuitter[nLangue]
+	textQuitter.set(s)
+	
+def majTextFinTour():
+	"""Mise à jour du texte du bouton Fin du Tour"""
+	s=listTradFinTour[nLangue]
+	textFinTour.set(s)
 
+def majTextes():
+	"""Mise à jour des textes des boutons"""
+	majTextJouer()
+	majTextQuitter()
+	majTextFinTour()
+
+def francais():
+	"""Traduit les textes en français"""
+	global nLangue
+	nLangue=0
+	majTextes()
+	
+def english():
+	"""Traduit les textes en anglais"""
+	global nLangue
+	nLangue=1
+	majTextes()
+	
+def deustch():
+	"""Traduit les textes en allemand"""
+	global nLangue
+	nLangue=2
+	majTextes()
+	
 	
 
 
@@ -808,20 +846,30 @@ c.bind_all('<Button-3>',clique2)
 #Emma: adaptation au trackpad du Mac qui ne comporte qu'un bouton
 c.bind_all('<Double-1>',clique2)
 
-#Emma: ajout des drapeaux
-C0=Canvas(fen,width=300, height=300)
-drapeau0= PhotoImage(file="drapeau_fr.png")
-C0.create_image(150,150, image=drapeau0)
-C0.grid(row=0, column=1)
-C1=Canvas(fen,width=300, height=300)
-drapeau1= PhotoImage(file="drapeau_en.png")
-C1.create_image(150,150, image=drapeau1)
-C1.grid(row=0, column=2)
-C2=Canvas(fen,width=300, height=300)
-drapeau2= PhotoImage(file="drapeau_de.png")
-C2.create_image(150,150, image=drapeau2)
-C2.grid(row=0, column=3)
 
+#Emma: ajout des messages dans les différentes langues
+nLangue=0
+listTradJouer=["Jouer","Play","Spielen"]
+listTradQuitter=["Quitter","Leave","Weggehen"]
+listTradFinTour=["Fin du Tour","End of the Round","Rundes Ende"]
+listTradTourDe=["C'est au tour de ","It's ",""]
+listTradDeJouer=[" de jouer"," turn"," ist dran"]
+listTradClicJouer=["Cliquer sur le bouton Jouer","Click on the Play button","Klick auf das Spielen Taste"]
+listTradFin=["Cliquer sur le bouton Fin du Tour","Click on the button End of the Round","Klick auf Rundes Ende Taste"]
+listTradClicPionB=["Cliquer sur un de vos pions blancs","Click on one of your white pawns","Klick auf einer von deinen Weiss Bauer"]
+listTradClicPionN=["Cliquer sur un de vos pions noirs","Click on one of your black pawns","Klick auf einer von deinen Schwarz Bauer"]
+listTradDoubleClic=["Double cliquer sur la case destination de votre pion","Doucle-click on the destination's square of your pawn","Zweimal-klick auf dein Ziels Feld auf deiner Bauer"]
+
+#Emma: ajout des drapeaux
+drapeau0= PhotoImage(file="drapeau_fr.png")
+Wdrapeau0=Button(fen,image=drapeau0,command=francais,width=100)
+Wdrapeau0.grid(row=0,column=1)
+drapeau1= PhotoImage(file="drapeau_en.png")
+Wdrapeau1=Button(fen,image=drapeau1,command=english,width=100)
+Wdrapeau1.grid(row=0,column=2)
+drapeau2= PhotoImage(file="drapeau_de.png")
+Wdrapeau2=Button(fen,image=drapeau2,command=deustch,width=100)
+Wdrapeau2.grid(row=0,column=3)
 
 #Emma: ajout des chronomètres
 titreC1=StringVar()
@@ -867,12 +915,19 @@ message2.set("Initialisation en cours")
 Wmessage2=Label(fen,textvariable=message2,width=40)
 Wmessage2.grid(row=7,column=1,columnspan=3)
 
-Wtour=Button(fen,text="Fin du Tour",command=Tour,width=12)
+textFinTour=StringVar()
+textFinTour.set("")
+Wtour=Button(fen,textvariable=textFinTour,command=Tour,width=12)
 Wtour.grid(row=8,column=1,columnspan=3)
 
-Winterrupteur=Button(fen,text="Jouer",command=debut,width=12)
+textJouer=StringVar()
+textJouer.set("")
+Winterrupteur=Button(fen,textvariable=textJouer,command=debut,width=12)
 Winterrupteur.grid(row=8,column=0,)
 
-Wquitter=Button(fen,text="Quitter",command=fen.quit)  
+textQuitter=StringVar()
+textQuitter.set("")
+Wquitter=Button(fen,textvariable=textQuitter,command=fen.quit)  
 Wquitter.grid(row=9,column=0) 
+english() #pour définir l'anglais comme langage par défaut
 fen.mainloop()

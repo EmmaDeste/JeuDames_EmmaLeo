@@ -747,11 +747,20 @@ def majM2():
 	else:
 		message="error 404"
 	message2.set(message)
-	
+
+#Emma
+def configureCouleursChrono(couleurBlanc,couleurNoir):
+		Wchrono1.configure(foreground=couleurBlanc)
+		Wchrono3.configure(foreground=couleurBlanc)
+		Wchrono2.configure(foreground=couleurNoir)
+		Wchrono4.configure(foreground=couleurNoir)
+		
 #Emma
 def majChrono():
 	"""Calcul et Affichage des quatre valeurs des chronomètres"""
-	global oldnbdecase,oldturn,partieEnCours,heureDebutCoup,dureeTotaleBlanc,dureeTotaleNoir
+	global oldnbdecase,oldturn,partieEnCours,heureDebutCoup
+	global dureeTotaleBlanc,dureeTotaleNoir
+	global Wchrono1,Wchrono2,Wchrono3,Wchrono4
 	heureActuelle=datetime.datetime.now()
 	if oldnbdecase<=0 and nbdecase>0:
 		heureDebutCoup=heureActuelle
@@ -770,16 +779,26 @@ def majChrono():
 			heureDebutCoup=heureActuelle
 			if oldturn==1:
 				dureeTotaleBlanc+=dureeCoupActuel
-				s=str(dureeTotaleBlanc)+" s"
+				s=str(dureeTotaleBlanc)[:6]+" s"
 				textChrono3.set(s)
 			if oldturn==2:
 				dureeTotaleNoir+=dureeCoupActuel
-				s=str(dureeTotaleNoir)+" s"
+				s=str(dureeTotaleNoir)[:6]+" s"
 				textChrono4.set(s)
 				
+		if turn==1: 
+			avantageTempsNoir=dureeTotaleBlanc+dureeCoupActuel-dureeTotaleNoir
+		else:
+			avantageTempsNoir=dureeTotaleBlanc-dureeCoupActuel-dureeTotaleNoir
+		if avantageTempsNoir< -15:
+			configureCouleursChrono("green","red")
+		elif avantageTempsNoir< 15:
+			configureCouleursChrono("blue","blue")
+		else:
+			configureCouleursChrono("red","green")
+	
 	oldnbdecase=nbdecase
 	oldturn=turn
-	
 
 #Emma
 def majM():
